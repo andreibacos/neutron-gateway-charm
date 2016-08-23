@@ -33,6 +33,10 @@ from charmhelpers.fetch import (
     apt_update,
     apt_install,
 )
+from charmhelpers.contrib.network.linuxbridge import (
+    add_lxbridge,
+    add_lxbridge_port,
+)
 from charmhelpers.contrib.network.ovs import (
     add_bridge,
     add_bridge_port,
@@ -831,7 +835,29 @@ def do_openstack_upgrade(configs):
     configs.set_release(openstack_release=new_os_rel)
     configs.write_all()
 
+def configure_lb():
+    if config('plugin') == 'lb':
+        add_lxbridge(INT_BRIDGE)
+        add_lxbridge(EXT_BRIDGE)
+        ext_port_ctx = ExternalPortContext()()
+        if ext_port_ctx and ext_port_ctx['ext_port']:
+            add_lxbridge_port(EXT_BRIDGE, ext_port_ctx['ext_port'])
 
+        portmaps = DataPortContext()()
+        bridgemaps = parse_bridge_mappings(config('bridge-mappings'))
+        for provider, br in bridgemaps.iteritems():
+            add_lxbridge(br)
+            if not portmaps:
+                continue
+
+            for port, _br in portmaps.iteritems():
+                if _br == br:
+                    add_lxbridge_port(br, port, promisc=True)
+
+        # Ensure this runs so that mtu is applied to data-port interfaces if
+        # provided.
+        service_restart('os-charm-phy-nic-mtu')
+    
 def configure_ovs():
     if config('plugin') in [OVS, OVS_ODL]:
         if not service_running('openvswitch-switch'):
@@ -845,7 +871,7 @@ def configure_ovs():
         portmaps = DataPortContext()()
         bridgemaps = parse_bridge_mappings(config('bridge-mappings'))
         for provider, br in bridgemaps.iteritems():
-            add_bridge(br)
+            add_lxbridge(br)
             if not portmaps:
                 continue
 

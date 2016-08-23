@@ -814,7 +814,7 @@ class NeutronContext(OSContextGenerator):
                                           self.network_manager)
         config = neutron_plugin_attribute(self.plugin, 'config',
                                           self.network_manager)
-        ovs_ctxt = {'core_plugin': driver,
+        lb_ctxt = {'core_plugin': driver,
                     'neutron_plugin': 'lb',
                     'neutron_security_groups': self.neutron_security_groups,
                     'local_ip': unit_private_ip(),

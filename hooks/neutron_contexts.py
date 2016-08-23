@@ -92,7 +92,7 @@ class NeutronGatewayContext(NeutronAPIContext):
             'instance_mtu': config('instance-mtu'),
             'interface_mappings': config('interface-mappings'),
             'enable_vxlan': config('enable-vxlan'),
-            'security_group': config('security-group'),
+            'security_groups': config('security-groups'),
             'l2_population': api_settings['l2_population'],
             'enable_dvr': api_settings['enable_dvr'],
             'enable_l3ha': api_settings['enable_l3ha'],

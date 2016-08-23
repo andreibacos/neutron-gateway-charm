@@ -85,7 +85,7 @@ options:
         ovs-odl - ML2 + Open vSwitch with OpenDayLight Controller
   ext-port:
     type: string
-    default: eth1
+    default: 
     description: |
       Deprecated: Use bridge-mappings and data-port to create a network
       which can be used for external connectivity.  You can call the network
@@ -97,7 +97,7 @@ options:
       address already assigned will be used), or interfaces (eth0)
   data-port:
     type: string
-    default: eth0
+    default: 'data-br:eth1'
     description: |
       Space-delimited list of bridge:port mappings. Ports will be added to
       their corresponding bridge. The bridges will allow usage of flat or
@@ -159,7 +159,7 @@ options:
       dhcp options for neutron dnsmasq.
   enable-l3-agent:
     type: boolean
-    default: True
+    default: False
     description: |
       Optional configuration to support use of linux router
       Note that this is used only for Cisco n1kv plugin.
@@ -181,14 +181,14 @@ options:
       If left empty, the nagios_context will be used as the servicegroup
   bridge-mappings:
     type: string
-    default: 'physnet1:br-data'
+    default: 'physnet1:data-br'
     description: |
       Space-separated list of ML2 data bridge mappings with format
       <provider>:<bridge>.
       For linuxbridge use <provider>:<PUBLIC_INTERFACE_NAME>.
   interface-mappings:
     type: string
-    default: 'physnet1:eth1'
+    default: ''
     description: |
       Physical interface mappings for linuxbridge. For now this is
       the only options available for linuxbridge.Bridge mappings
@@ -212,11 +212,11 @@ options:
     default: False
     description: |
       Enable or disable vxlan tunneling for linuxbridge agent.
-  security-group:
+  security-groups:
     type: boolean
     default: True
     description: |
-      Whether to enable of disable security-group for linuxbridge agent.
+      Whether to enable of disable security-groups for linuxbridge agent.
   # Network configuration options
   # by default all access is over 'private-address'
   os-data-network:

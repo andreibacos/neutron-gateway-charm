@@ -57,6 +57,7 @@ from neutron_utils import (
     git_install,
     git_install_requested,
     valid_plugin,
+    configure_lb,
     configure_ovs,
     stop_services,
     cache_env_data,
@@ -142,6 +143,7 @@ def config_changed():
     if valid_plugin():
         CONFIGS.write_all()
         configure_ovs()
+        configure_lb()
     else:
         message = 'Please provide a valid plugin config'
         log(message, level=ERROR)
